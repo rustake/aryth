@@ -14,6 +14,8 @@ pub struct MatrixAndBound<T> (
 impl<T> MatrixAndBound<T> {
     pub fn ref_as_tuple(&self) -> (&Matrix<Option<T>>, &Option<Bound<T>>)
     { (&self.0, &self.1) }
+    pub fn move_to_tuple(self) -> (Matrix<Option<T>>, Option<Bound<T>>)
+    { (self.0, self.1) }
 }
 
 impl<T> fmt::Display for MatrixAndBound<T> where
