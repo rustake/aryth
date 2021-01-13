@@ -2,18 +2,18 @@ use veho::vector::iterate;
 
 use crate::types::Bound;
 
-pub fn bound<I>(it: I) -> Bound<I::Item> where
+pub fn bound<I>(it: I) -> Option<Bound<I::Item>> where
     I: IntoIterator,
     I::Item: Copy + PartialOrd,
     I::IntoIter: Iterator<Item=I::Item>
 {
     let iter = &mut it.into_iter();
     match iter.next() {
-        None => { Bound::new(None, None) }
+        None => { None }
         Some(first) => {
             let (mut min, mut max) = (*&first, *&first);
             iterate(iter, |x| { if x > max { max = x } else if x < min { min = x } });
-            Bound::new(Some(min), Some(max))
+            Some(Bound::new(min, max))
         }
     }
 }
@@ -29,7 +29,7 @@ mod tests {
         let vec = vec![4, 5, 9, 3, 7, 1];
         let k = "some";
         let bounded = bound(&vec);
-        println!("{} bound: {}", k, bounded);
+        println!("{} bound: {}", k, bounded.unwrap());
         println!("{} original: {:?}", k, vec);
     }
 
@@ -41,7 +41,7 @@ mod tests {
             ("some", vec![4, 5, 9, 3, 7, 1])
         ].into_hashmap();
         (&candidates).iterate(|k, vec| {
-            let bounded = bound(vec);
+            let bounded = bound(vec).unwrap();
             println!("{} bound: {}", k, bounded);
             println!("{} original: {:?}", k, vec);
         });
