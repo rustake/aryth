@@ -14,6 +14,12 @@ impl<T> Bound<T> where T: Copy {
     pub fn new(min: T, max: T) -> Self { Bound { min, max } }
 }
 
+impl<T> Bound<T> where T: Copy + PartialOrd {
+    pub fn expand(&mut self, v: &T)
+    { if v < &self.min { self.min = *v } else if v > &self.max { self.max = *v } }
+}
+
+
 // impl<T> Bound<T> where T: NumOps + Copy {
 //     pub fn by(min: Option<T>, max: Option<T>) -> Self {
 //         let dif = match (min, max) {

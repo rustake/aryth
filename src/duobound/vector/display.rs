@@ -1,29 +1,31 @@
 use std::fmt;
 
+use veho::entries::MoveUnwind;
 use veho::vector::Mappers;
 
 use crate::duobound::helpers::assort;
 use crate::duobound::vector::DuoBound;
-use crate::types::BoundVector;
+use crate::types::{expand_bound, VectorAndBound};
 
 impl<IT, T> DuoBound<T> for IT where
     T: fmt::Display,
     IT: IntoIterator<Item=T>,
     IT::IntoIter: Iterator<Item=T>,
 {
-    fn duobound(self) -> (BoundVector<f32>, BoundVector<f32>) {
-        let mut bound_a = BoundVector { body: Vec::new(), min: None, max: None, count: 0 };
-        let mut bound_b = BoundVector { body: Vec::new(), min: None, max: None, count: 0 };
-        self.iterate(|x| {
-            let (a, b) = assort(x);
-            bound_a.push(a);
-            bound_b.push(b);
+    fn duobound(self) -> (VectorAndBound<f32>, VectorAndBound<f32>) {
+        let (mut bd_x, mut bd_y) = (None, None);
+        let tuples = self.mapper(|value| {
+            let (x, y) = assort(value);
+            expand_bound(&mut bd_x, &x);
+            expand_bound(&mut bd_y, &x);
+            (x, y)
         });
-        return (bound_a, bound_b);
+        let (ve_x, ve_y) = tuples.move_unwind();
+        return (VectorAndBound(ve_x, bd_x), VectorAndBound(ve_y, bd_y));
     }
 }
 
-pub fn duobound<I>(it: I) -> (BoundVector<f32>, BoundVector<f32>) where
+pub fn duobound<I>(it: I) -> (VectorAndBound<f32>, VectorAndBound<f32>) where
     I: IntoIterator,
     I::Item: fmt::Display,
 { it.duobound() }
@@ -48,6 +50,6 @@ mod tests {
         let (vec_x, vec_y) = duobound(&vec);
         println!("{}", vec_x);
         println!("{}", vec_y);
-        println!("{:?}", vec);
+        println!("original {:?}", vec);
     }
 }

@@ -1,4 +1,4 @@
-pub use types::{Bound, BoundMatrix, BoundVector};
+pub use types::{Bound, expand_bound, MatrixAndBound, VectorAndBound};
 
 pub mod math;
 pub mod duobound;
@@ -6,12 +6,3 @@ pub mod bound;
 pub mod utils;
 
 mod types;
-
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}

@@ -1,10 +1,11 @@
 use std::fmt;
 
+use veho::entries::{MoveUnwind, RefUnwind};
 use veho::vector::Mappers;
 
 use crate::duobound::helpers::assort;
 use crate::duobound::matrix::DuoBound;
-use crate::types::{BoundMatrix, protract};
+use crate::types::{expand_bound, MatrixAndBound};
 
 impl<T, R, M> DuoBound<T, R> for M where
     T: fmt::Display,
@@ -12,27 +13,21 @@ impl<T, R, M> DuoBound<T, R> for M where
     M: IntoIterator<Item=R>,
     M::IntoIter: Iterator<Item=R>,
 {
-    fn duobound(self) -> (BoundMatrix<f32>, BoundMatrix<f32>) {
-        let mut bound_a = BoundMatrix { body: Vec::new(), min: None, max: None, count: 0 };
-        let mut bound_b = BoundMatrix { body: Vec::new(), min: None, max: None, count: 0 };
-        self.iterate(|row| {
-            let mut row_a = Vec::new();
-            let mut row_b = Vec::new();
-            row.iterate(|element| {
-                let (a, b) = assort(element);
-                if let Some(v) = a { protract(&mut bound_a.min, &mut bound_a.max, &mut bound_a.count, &v) }
-                if let Some(v) = b { protract(&mut bound_b.min, &mut bound_b.max, &mut bound_b.count, &v) }
-                row_a.push(a);
-                row_b.push(b);
-            });
-            bound_a.body.push(row_a);
-            bound_b.body.push(row_b);
-        });
-        return (bound_a, bound_b);
+    fn duobound(self) -> (MatrixAndBound<f32>, MatrixAndBound<f32>) {
+        let (mut bd_x, mut bd_y) = (None, None);
+        let (mx_x, mx_y) = self.mapper(|row| {
+            row.mapper(|element| {
+                let (x, y) = assort(element);
+                expand_bound(&mut bd_x, &x);
+                expand_bound(&mut bd_y, &y);
+                (x, y)
+            }).clone_unwind()
+        }).move_unwind();
+        return (MatrixAndBound(mx_x, bd_x), MatrixAndBound(mx_y, bd_y));
     }
 }
 
-pub fn duobound<T, R, M>(mx: M) -> (BoundMatrix<f32>, BoundMatrix<f32>) where
+pub fn duobound<T, R, M>(mx: M) -> (MatrixAndBound<f32>, MatrixAndBound<f32>) where
     T: fmt::Display,
     R: IntoIterator<Item=T>,
     M: IntoIterator<Item=R>,

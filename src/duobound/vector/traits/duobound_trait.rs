@@ -1,6 +1,6 @@
-use crate::types::BoundVector;
+use crate::types::VectorAndBound;
 
 pub trait DuoBound<T>: IntoIterator<Item=T>
 {
-    fn duobound(self) -> (BoundVector<f32>, BoundVector<f32>);
+    fn duobound(self) -> (VectorAndBound<f32>, VectorAndBound<f32>);
 }

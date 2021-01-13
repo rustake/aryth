@@ -1,10 +1,10 @@
-pub use _protract::protract;
+pub use _expand_bound::expand_bound;
 pub use bound::Bound;
-pub use bound_matrix::BoundMatrix;
-pub use bound_vector::BoundVector;
+pub use matrix_and_bound::MatrixAndBound;
+pub use vector_and_bound::VectorAndBound;
 
-mod bound_vector;
 mod bound;
-mod bound_matrix;
-mod _protract;
+mod vector_and_bound;
+mod matrix_and_bound;
+mod _expand_bound;
 
