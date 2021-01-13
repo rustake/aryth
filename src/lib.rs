@@ -1,7 +1,11 @@
-mod math;
-mod duobound;
+pub use types::{Bound, BoundMatrix, BoundVector};
+
+pub mod math;
+pub mod duobound;
+pub mod bound;
+pub mod utils;
+
 mod types;
-mod bound;
 
 
 #[cfg(test)]

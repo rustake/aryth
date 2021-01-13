@@ -1,7 +1,7 @@
 use num::Num;
 use num::traits::AsPrimitive;
 
-fn int_exp<T>(x: T) -> i32 where T: Num + AsPrimitive<f32> + Copy {
+pub fn int_exp<T>(x: T) -> i32 where T: Num + AsPrimitive<f32> + Copy {
     x.as_().abs().log10() as i32
 }
 
@@ -12,6 +12,16 @@ fn int_exp<T>(x: T) -> i32 where T: Num + AsPrimitive<f32> + Copy {
 //     match result {
 //         None => { x }
 //         Some(v) => { v }
+//     }
+// }
+
+// fn max<T>(vec: Vec<T>) -> Option<T> where T: Num {
+//     match vec.iter().next() {
+//         None => { None }
+//         Some(mut max) => {
+//             for x in vec.into_iter() { if x > max { max = x }; }
+//             Some(max)
+//         }
 //     }
 // }
 

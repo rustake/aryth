@@ -1,11 +1,6 @@
-pub use duoboundable::DuoBoundable;
-pub use vector::duobound;
-
-// pub use vector::duobound;
-
-mod duoboundable;
-mod matrix;
-mod vector;
+pub mod matrix;
+pub mod vector;
+mod helpers;
 
 
 

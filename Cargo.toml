@@ -1,8 +1,12 @@
 [package]
 name = "aryth"
-version = "0.1.0"
-authors = ["Hoyeung <hoyeungw@outlook.com>"]
+version = "0.0.1"
+description = "a iterable toolset"
+authors = ["Hoyeung Wong <hoyeungw@outlook.com>"]
+readme = "README.md"
 edition = "2018"
+license = "MIT"
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

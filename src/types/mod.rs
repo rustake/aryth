@@ -1,4 +1,4 @@
-pub use bounds::{Bound, BoundVector};
+pub use bounds::{Bound, BoundMatrix, BoundVector, protract};
 
 mod bounds;
 

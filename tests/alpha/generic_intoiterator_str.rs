@@ -1,7 +1,7 @@
 use std::fmt;
 
 use texting::str_value;
-use veho::vector::{mapper, Mappers};
+use veho::vector::Mappers;
 
 pub fn iter_str_value<IT>(it: IT) -> Vec<u32> where
     IT: IntoIterator,
@@ -14,6 +14,6 @@ pub fn iter_str_value<IT>(it: IT) -> Vec<u32> where
 fn test() {
     let vec = vec!["1", "2", "3"];
     let result = iter_str_value(&vec);
-    // println!("{:?}", result);
+    println!("{:?}", result);
     println!("{:?}", vec);
 }

@@ -1,8 +1,7 @@
-// pub use duobound_display::duobound;
-
 pub use display::duobound;
+pub use traits::DuoBound;
 
 mod display;
-mod num;
-mod str;
+pub mod num;
+mod traits;
 

@@ -18,8 +18,8 @@ pub fn duobound<'a, T>(it: impl IntoIterator<Item=&'a T>) -> (BoundVector<f32>, 
     });
     let len = (&vec_y).len();
     return (
-        BoundVector { vec: vec![None; len], min: None, max: None, count: 0 },
-        BoundVector { vec: vec_y, min: min_y, max: max_y, count: len }
+        BoundVector { body: vec![None; len], min: None, max: None, count: 0 },
+        BoundVector { body: vec_y, min: min_y, max: max_y, count: len }
     );
 }
 
