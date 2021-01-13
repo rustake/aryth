@@ -22,6 +22,8 @@ pub fn bound<I>(it: I) -> Option<Bound<I::Item>> where
 mod tests {
     use veho::hashmap::{Mappers, MoveInit};
 
+    use crate::utils::option_to_string;
+
     use super::*;
 
     #[test]
@@ -41,8 +43,8 @@ mod tests {
             ("some", vec![4, 5, 9, 3, 7, 1])
         ].into_hashmap();
         (&candidates).iterate(|k, vec| {
-            let bounded = bound(vec).unwrap();
-            println!("{} bound: {}", k, bounded);
+            let bounded = bound(vec);
+            println!("{} bound: {}", k, option_to_string(&bounded));
             println!("{} original: {:?}", k, vec);
         });
         println!("original candidates = {:?}", candidates);

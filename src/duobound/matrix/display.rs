@@ -1,10 +1,9 @@
 use std::fmt;
 
-use veho::entries::{MoveUnwind, RefUnwind};
+use veho::entries::MoveUnwind;
 use veho::vector::Mappers;
 
-use crate::Bound;
-use crate::duobound::helpers::assort;
+use crate::duobound::helpers::assort_expand_entry_bound;
 use crate::duobound::matrix::DuoBound;
 use crate::types::MatrixAndBound;
 
@@ -15,16 +14,16 @@ impl<T, R, M> DuoBound<T, R> for M where
     M::IntoIter: Iterator<Item=R>,
 {
     fn duobound(self) -> (MatrixAndBound<f32>, MatrixAndBound<f32>) {
-        let (mut bd_x, mut bd_y) = (Bound::default(), Bound::default());
-        let (mx_x, mx_y) = self.mapper(|row| {
-            row.mapper(|value| {
-                let (x, y) = assort(value);
-                if let Some(v) = x { (&mut bd_x).expand(&v) }
-                if let Some(v) = y { (&mut bd_y).expand(&v) }
-                (x, y)
-            }).clone_unwind()
-        }).move_unwind();
-        return (MatrixAndBound(mx_x, bd_x), MatrixAndBound(mx_y, bd_y));
+        let (mut bd_x, mut bd_y) = (None, None);
+        let (mx_x, mx_y) = self
+            .mapper(|row| row
+                .mapper(|v| assort_expand_entry_bound(&mut bd_x, &mut bd_y, &v))
+                .move_unwind()
+            ).move_unwind();
+        return (
+            MatrixAndBound(mx_x, bd_x),
+            MatrixAndBound(mx_y, bd_y)
+        );
     }
 }
 

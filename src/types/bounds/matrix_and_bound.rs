@@ -8,11 +8,11 @@ use crate::utils::option_to_string;
 
 pub struct MatrixAndBound<T> (
     pub Matrix<Option<T>>,
-    pub Bound<T>,
+    pub Option<Bound<T>>,
 );
 
 impl<T> MatrixAndBound<T> {
-    pub fn ref_as_tuple(&self) -> (&Matrix<Option<T>>, &Bound<T>)
+    pub fn ref_as_tuple(&self) -> (&Matrix<Option<T>>, &Option<Bound<T>>)
     { (&self.0, &self.1) }
 }
 
@@ -25,7 +25,7 @@ impl<T> fmt::Display for MatrixAndBound<T> where
                format!("[ \n{} \n]", matrix.mapper(|row| {
                    format!("    [ {} ],", row.mapper(option_to_string).join(", "))
                }).join("\n")),
-               bound
+               option_to_string(bound)
         )
     }
 }
@@ -53,7 +53,7 @@ mod tests {
         ];
         let mut bound_and_matrix = MatrixAndBound(
             iso(4, 4, None),
-            Bound::new(0, 0),
+            None,
         );
         let holder_matrix = &mut bound_and_matrix.0;
         zipper(holder_matrix, &mx, |holder, val| {
