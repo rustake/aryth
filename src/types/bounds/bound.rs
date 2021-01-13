@@ -14,6 +14,10 @@ impl<T> Bound<T> where T: Copy {
     pub fn new(min: T, max: T) -> Self { Bound { min, max } }
 }
 
+impl<T> Bound<T> where T: Default {
+    pub fn default() -> Self { Bound { min: T::default(), max: T::default() } }
+}
+
 impl<T> Bound<T> where T: Copy + PartialOrd {
     pub fn expand(&mut self, v: &T)
     { if v < &self.min { self.min = *v } else if v > &self.max { self.max = *v } }

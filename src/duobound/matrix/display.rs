@@ -3,9 +3,10 @@ use std::fmt;
 use veho::entries::{MoveUnwind, RefUnwind};
 use veho::vector::Mappers;
 
+use crate::Bound;
 use crate::duobound::helpers::assort;
 use crate::duobound::matrix::DuoBound;
-use crate::types::{expand_bound, MatrixAndBound};
+use crate::types::MatrixAndBound;
 
 impl<T, R, M> DuoBound<T, R> for M where
     T: fmt::Display,
@@ -14,12 +15,12 @@ impl<T, R, M> DuoBound<T, R> for M where
     M::IntoIter: Iterator<Item=R>,
 {
     fn duobound(self) -> (MatrixAndBound<f32>, MatrixAndBound<f32>) {
-        let (mut bd_x, mut bd_y) = (None, None);
+        let (mut bd_x, mut bd_y) = (Bound::default(), Bound::default());
         let (mx_x, mx_y) = self.mapper(|row| {
-            row.mapper(|element| {
-                let (x, y) = assort(element);
-                expand_bound(&mut bd_x, &x);
-                expand_bound(&mut bd_y, &y);
+            row.mapper(|value| {
+                let (x, y) = assort(value);
+                if let Some(v) = x { (&mut bd_x).expand(&v) }
+                if let Some(v) = y { (&mut bd_y).expand(&v) }
                 (x, y)
             }).clone_unwind()
         }).move_unwind();
