@@ -1,6 +1,6 @@
 use std::fmt;
 
-use veho::entries::MoveUnwind;
+use veho::entries::Unwinds;
 use veho::vector::Mappers;
 
 use crate::duobound::helpers::assort_expand_entry_bound;
@@ -18,8 +18,8 @@ impl<T, R, M> DuoBound<T, R> for M where
         let (mx_x, mx_y) = self
             .mapper(|row| row
                 .mapper(|v| assort_expand_entry_bound(&mut bd_x, &mut bd_y, &v))
-                .move_unwind()
-            ).move_unwind();
+                .unwind()
+            ).unwind();
         return (
             MatrixAndBound(mx_x, bd_x),
             MatrixAndBound(mx_y, bd_y)

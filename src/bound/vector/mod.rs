@@ -20,7 +20,8 @@ pub fn bound<I>(it: I) -> Option<Bound<I::Item>> where
 
 #[cfg(test)]
 mod tests {
-    use veho::hashmap::{Mappers, MoveInit};
+    use veho::entries::IntoHashmap;
+    use veho::hashmap::Mappers;
 
     use crate::utils::option_to_string;
 

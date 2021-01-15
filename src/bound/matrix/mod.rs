@@ -28,9 +28,10 @@ pub fn bound<M, R>(mx: M) -> Option<Bound<R::Item>> where
 
 #[cfg(test)]
 mod tests {
-    use veho::hashmap::{Mappers, MoveInit};
+    use veho::hashmap::{Mappers};
 
     use super::*;
+    use veho::entries::IntoHashmap;
 
     #[test]
     fn test() {
