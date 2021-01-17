@@ -6,3 +6,4 @@ pub mod bound;
 pub mod utils;
 
 mod types;
+pub mod indicator;

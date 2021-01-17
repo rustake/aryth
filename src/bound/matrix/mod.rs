@@ -1,5 +1,6 @@
 use veho::matrix::iterate;
 
+use crate::bound::vector::bound as bound_vector;
 use crate::types::Bound;
 
 pub fn bound<M, R>(mx: M) -> Option<Bound<R::Item>> where
@@ -14,12 +15,12 @@ pub fn bound<M, R>(mx: M) -> Option<Bound<R::Item>> where
     match (rows_iter).next() {
         None => { None }
         Some(row) => {
-            match (&mut row.into_iter()).next() {
+            let bound = bound_vector(row);
+            match bound {
                 None => { None }
-                Some(val) => {
-                    let (mut min, mut max) = (*&val, *&val);
-                    iterate(rows_iter, |x| { if x > max { max = x } else if x < min { min = x } });
-                    Some(Bound::new(min, max))
+                Some(mut b) => {
+                    iterate(rows_iter, |x| { if x > b.max { b.max = x } else if x < b.min { b.min = x } });
+                    Some(b)
                 }
             }
         }
@@ -28,10 +29,12 @@ pub fn bound<M, R>(mx: M) -> Option<Bound<R::Item>> where
 
 #[cfg(test)]
 mod tests {
-    use veho::hashmap::{Mappers};
+    use veho::entries::IntoHashmap;
+    use veho::hashmap::Mappers;
+
+    use crate::utils::option_to_string;
 
     use super::*;
-    use veho::entries::IntoHashmap;
 
     #[test]
     fn test() {
@@ -50,14 +53,14 @@ mod tests {
                 vec![7, ],
             ]),
             ("some", vec![
-                vec![1, 2, 3],
-                vec![4, 5, 6],
-                vec![7, 8, 9],
+                vec![1, 3, 9],
+                vec![1, 2, 4],
+                vec![1, 1, 1],
             ])
         ].into_hashmap();
         candidates.iterate(|k, mx| {
             let bounded = bound(&mx);
-            println!("{}: {}", k, bounded.unwrap());
+            println!("{}: {}", k, option_to_string(&bounded));
         });
     }
 }
