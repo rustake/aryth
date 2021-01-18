@@ -1,4 +1,4 @@
-use std::cmp::{max, min};
+use veho::vector::Reduces;
 
 pub trait Indicators: IntoIterator {
     fn max_by<T, F>(self, indicator: F) -> Option<T> where
@@ -6,34 +6,14 @@ pub trait Indicators: IntoIterator {
         Self::IntoIter: Iterator<Item=Self::Item>,
         F: Fn(Self::Item) -> T,
         T: Ord,
-    {
-        let iter = &mut self.into_iter();
-        match iter.next() {
-            None => { None }
-            Some(first) => {
-                let ini_v = indicator(first);
-                let max_v = iter.fold(ini_v, |a, v| { max(a, indicator(v)) });
-                Some(max_v)
-            }
-        }
-    }
+    { self.into_iter().mapreduce(indicator, Ord::max) }
 
     fn min_by<T, F>(self, indicator: F) -> Option<T> where
         Self: Sized,
         Self::IntoIter: Iterator<Item=Self::Item>,
         F: Fn(Self::Item) -> T,
         T: Ord,
-    {
-        let iter = &mut self.into_iter();
-        match iter.next() {
-            None => { None }
-            Some(first) => {
-                let ini_v = indicator(first);
-                let max_v = iter.fold(ini_v, |a, v| { min(a, indicator(v)) });
-                Some(max_v)
-            }
-        }
-    }
+    { self.into_iter().mapreduce(indicator, Ord::min) }
 }
 
 impl<I> Indicators for I where

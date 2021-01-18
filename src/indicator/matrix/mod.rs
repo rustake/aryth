@@ -1,9 +1,4 @@
-use veho::matrix::iterate;
-
-use crate::indicator::vector::{
-    max_by as vector_max_by,
-    min_by as vector_min_by,
-};
+use veho::matrix::Reduces;
 
 pub trait Indicators<R>: IntoIterator<Item=R> where
     R: IntoIterator,
@@ -13,27 +8,9 @@ pub trait Indicators<R>: IntoIterator<Item=R> where
         Self::IntoIter: Iterator<Item=R>,
         R::Item: Ord,
         R::IntoIter: Iterator<Item=R::Item>,
-        F: Fn(R::Item) -> T,
+        F: FnMut(R::Item) -> T,
         T: Ord,
-    {
-        let rows_iter = &mut self.into_iter();
-        match (rows_iter).next() {
-            None => { None }
-            Some(row) => {
-                let max = vector_max_by(row, &indicator);
-                match max {
-                    None => { None }
-                    Some(mut a) => {
-                        iterate(rows_iter, |x| {
-                            let v = indicator(x);
-                            if v > a { a = v }
-                        });
-                        Some(a)
-                    }
-                }
-            }
-        }
-    }
+    { self.into_iter().mapreduce(indicator, Ord::max) }
 
     fn min_by<T, F>(self, indicator: F) -> Option<T> where
         Self: Sized,
@@ -42,25 +19,7 @@ pub trait Indicators<R>: IntoIterator<Item=R> where
         R::IntoIter: Iterator<Item=R::Item>,
         F: Fn(R::Item) -> T,
         T: Ord,
-    {
-        let rows_iter = &mut self.into_iter();
-        match (rows_iter).next() {
-            None => { None }
-            Some(row) => {
-                let min = vector_min_by(row, &indicator);
-                match min {
-                    None => { None }
-                    Some(mut a) => {
-                        iterate(rows_iter, |x| {
-                            let v = indicator(x);
-                            if v < a { a = v }
-                        });
-                        Some(a)
-                    }
-                }
-            }
-        }
-    }
+    { self.into_iter().mapreduce(indicator, Ord::min) }
 }
 
 impl<R, M> Indicators<R> for M where

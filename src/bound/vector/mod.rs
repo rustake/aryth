@@ -8,14 +8,11 @@ pub fn bound<I>(it: I) -> Option<Bound<I::Item>> where
     I::IntoIter: Iterator<Item=I::Item>
 {
     let iter = &mut it.into_iter();
-    match iter.next() {
-        None => { None }
-        Some(first) => {
-            let (mut min, mut max) = (*&first, *&first);
-            iterate(iter, |x| { if x > max { max = x } else if x < min { min = x } });
-            Some(Bound::new(min, max))
-        }
-    }
+    iter.next().map(|ini|{
+        let (mut min, mut max) = (ini, ini);
+        iterate(iter, |x| { if x > max { max = x } else if x < min { min = x } });
+        Bound::new(min, max)
+    })
 }
 
 #[cfg(test)]

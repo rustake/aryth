@@ -1,6 +1,5 @@
-use veho::matrix::iterate;
+use veho::matrix::Reduces;
 
-use crate::bound::vector::bound as bound_vector;
 use crate::types::Bound;
 
 pub fn bound<M, R>(mx: M) -> Option<Bound<R::Item>> where
@@ -9,22 +8,12 @@ pub fn bound<M, R>(mx: M) -> Option<Bound<R::Item>> where
     R: IntoIterator,
     R::Item: Copy + PartialOrd,
     R::IntoIter: Iterator<Item=R::Item>
-
 {
-    let rows_iter = &mut mx.into_iter();
-    match (rows_iter).next() {
-        None => { None }
-        Some(row) => {
-            let bound = bound_vector(row);
-            match bound {
-                None => { None }
-                Some(mut b) => {
-                    iterate(rows_iter, |x| { if x > b.max { b.max = x } else if x < b.min { b.min = x } });
-                    Some(b)
-                }
-            }
-        }
-    }
+    mx.mapflat(|x| Bound::new(x, x),
+               |mut b, x| {
+                   if x > b.max { b.max = x } else if x < b.min { b.min = x }
+                   b
+               })
 }
 
 #[cfg(test)]
