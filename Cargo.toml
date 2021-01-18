@@ -1,6 +1,6 @@
 [package]
 name = "aryth"
-version = "0.0.7"
+version = "0.0.8"
 description = "a iterable toolset"
 authors = ["Hoyeung Wong <hoyeungw@outlook.com>"]
 readme = "README.md"
@@ -12,5 +12,5 @@ license = "MIT"
 
 [dependencies]
 num = ">=0.3.0"
-veho = ">=0.0.14"
-texting = ">=0.0.1"
+veho = ">=0.0.15"
+texting = ">=0.0.2"
