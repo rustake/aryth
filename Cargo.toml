@@ -12,5 +12,5 @@ license = "MIT"
 
 [dependencies]
 num = ">=0.3.0"
-veho = ">=0.0.15"
+veho = ">=0.0.16"
 texting = ">=0.0.2"
