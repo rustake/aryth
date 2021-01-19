@@ -1,6 +1,6 @@
 [package]
 name = "aryth"
-version = "0.0.8"
+version = "0.0.9"
 description = "a iterable toolset"
 authors = ["Hoyeung Wong <hoyeungw@outlook.com>"]
 readme = "README.md"
