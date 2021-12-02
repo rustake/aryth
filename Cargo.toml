@@ -4,7 +4,7 @@ version = "0.0.9"
 description = "a iterable toolset"
 authors = ["Hoyeung Wong <hoyeungw@outlook.com>"]
 readme = "README.md"
-edition = "2018"
+edition = "2021"
 license = "MIT"
 
 
